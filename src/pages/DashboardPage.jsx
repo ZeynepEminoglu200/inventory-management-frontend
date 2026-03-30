@@ -34,19 +34,45 @@ function DashboardPage() {
       setItems(response.data);
       setError("");
     } catch (err) {
-      setError("Failed to load items.");
+      setError(err.response?.data?.detail || "Failed to load items.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this item?");
+    if (!confirmed) return;
+
     try {
       await api.delete(`items/${id}/`);
       fetchItems();
+      setError("");
     } catch (err) {
-      setError("Failed to delete item.");
+      setError(err.response?.data?.detail || "Failed to delete item.");
     }
+  };
+
+  const handleClearFilters = async () => {
+    setSearch("");
+    setSelectedCategory("");
+    setLowStockOnly(false);
+
+    try {
+      setLoading(true);
+      const response = await api.get("items/");
+      setItems(response.data);
+      setError("");
+    } catch (err) {
+      setError("Failed to load items.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find((cat) => cat.id === categoryId);
+    return category ? category.name : "Uncategorised";
   };
 
   useEffect(() => {
@@ -59,7 +85,11 @@ function DashboardPage() {
       <Navbar />
       <h1>Inventory Dashboard</h1>
 
-      <div>
+      <Link to="/add-item">Add New Item</Link>
+
+      <section>
+        <h2>Filters</h2>
+
         <input
           type="text"
           placeholder="Search item name"
@@ -67,7 +97,10 @@ function DashboardPage() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
           <option value="">All categories</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -86,21 +119,24 @@ function DashboardPage() {
         </label>
 
         <button onClick={fetchItems}>Apply Filters</button>
-      </div>
+        <button onClick={handleClearFilters}>Clear Filters</button>
+      </section>
 
       {loading && <p>Loading items...</p>}
       {error && <p>{error}</p>}
-
       {!loading && items.length === 0 && <p>No items found.</p>}
 
       <ul>
         {items.map((item) => (
           <li key={item.id}>
-            <strong>{item.name}</strong> - {item.description} - Qty: {item.quantity}
-            {item.quantity < 5 && <span> ⚠ Low Stock</span>}
-            {" | "}
+            <h3>{item.name}</h3>
+            <p>{item.description || "No description provided."}</p>
+            <p>Quantity: {item.quantity}</p>
+            <p>Category: {getCategoryName(item.category)}</p>
+            {item.quantity < 5 && <p>⚠ Low Stock</p>}
+
             <Link to={`/edit-item/${item.id}`}>Edit</Link>
-            {" | "}
+            {" "}
             <button onClick={() => handleDelete(item.id)}>Delete</button>
           </li>
         ))}

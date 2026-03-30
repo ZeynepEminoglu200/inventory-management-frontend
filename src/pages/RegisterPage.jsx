@@ -29,8 +29,15 @@ function RegisterPage() {
       await api.post("register/", formData);
       navigate("/login");
     } catch (err) {
-      setError("Registration failed. Please check the entered details.");
-    } finally {
+  console.error("Registration error:", err.response?.data || err.message);
+  setError(
+    err.response?.data?.username?.[0] ||
+    err.response?.data?.email?.[0] ||
+    err.response?.data?.password?.[0] ||
+    err.response?.data?.detail ||
+    "Registration failed. Please check your details."
+  );
+}finally {
       setLoading(false);
     }
   };
