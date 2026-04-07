@@ -75,73 +75,131 @@ function DashboardPage() {
     return category ? category.name : "Uncategorised";
   };
 
+  const lowStockCount = items.filter((item) => item.quantity < 5).length;
+
   useEffect(() => {
     fetchCategories();
     fetchItems();
   }, []);
 
   return (
-    <div>
+    <>
       <Navbar />
-      <h1>Inventory Dashboard</h1>
 
-      <Link to="/add-item">Add New Item</Link>
+      <div className="page-container">
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Inventory Dashboard</h1>
+            <p className="muted">
+              Manage your stock, categories, and low inventory items.
+            </p>
+          </div>
 
-      <section>
-        <h2>Filters</h2>
+          <Link to="/add-item" className="btn-primary">
+            Add New Item
+          </Link>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Search item name"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <section className="card filters-card">
+          <h2>Filters</h2>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="">All categories</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
+          <div className="filters-grid">
+            <input
+              type="text"
+              placeholder="Search item name"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="">All categories</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
+            <label className="checkbox-inline">
+              <input
+                type="checkbox"
+                checked={lowStockOnly}
+                onChange={(e) => setLowStockOnly(e.target.checked)}
+              />
+              Low stock only
+            </label>
+
+            <button className="btn-primary" onClick={fetchItems}>
+              Apply Filters
+            </button>
+
+            <button className="btn-secondary" onClick={handleClearFilters}>
+              Clear Filters
+            </button>
+          </div>
+        </section>
+
+        <section className="card spacer-bottom">
+          <h2>Overview</h2>
+          <p className="muted">
+            Total items: <strong>{items.length}</strong> | Categories:{" "}
+            <strong>{categories.length}</strong> | Low stock items:{" "}
+            <strong>{lowStockCount}</strong>
+          </p>
+        </section>
+
+        {loading && <p className="status-message">Loading items...</p>}
+        {error && <p className="status-message error">{error}</p>}
+
+        {!loading && items.length === 0 && (
+          <div className="empty-state">
+            No items found. Try changing your filters or add a new item.
+          </div>
+        )}
+
+        <div className="items-grid">
+          {items.map((item) => (
+            <div key={item.id} className="item-card">
+              <div className="item-card-header">
+                <h3>{item.name}</h3>
+                {item.quantity < 5 && (
+                  <span className="low-stock-badge">Low Stock</span>
+                )}
+              </div>
+
+              <p className="item-description">
+                {item.description || "No description provided."}
+              </p>
+
+              <div className="item-meta">
+                <p>
+                  <strong>Quantity:</strong> {item.quantity}
+                </p>
+                <p>
+                  <strong>Category:</strong> {getCategoryName(item.category)}
+                </p>
+              </div>
+
+              <div className="item-actions">
+                <Link to={`/edit-item/${item.id}`} className="btn-secondary">
+                  Edit
+                </Link>
+
+                <button
+                  className="btn-danger"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           ))}
-        </select>
-
-        <label>
-          <input
-            type="checkbox"
-            checked={lowStockOnly}
-            onChange={(e) => setLowStockOnly(e.target.checked)}
-          />
-          Low stock only
-        </label>
-
-        <button onClick={fetchItems}>Apply Filters</button>
-        <button onClick={handleClearFilters}>Clear Filters</button>
-      </section>
-
-      {loading && <p>Loading items...</p>}
-      {error && <p>{error}</p>}
-      {!loading && items.length === 0 && <p>No items found.</p>}
-
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            <h3>{item.name}</h3>
-            <p>{item.description || "No description provided."}</p>
-            <p>Quantity: {item.quantity}</p>
-            <p>Category: {getCategoryName(item.category)}</p>
-            {item.quantity < 5 && <p>⚠ Low Stock</p>}
-
-            <Link to={`/edit-item/${item.id}`}>Edit</Link>
-            {" "}
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
 

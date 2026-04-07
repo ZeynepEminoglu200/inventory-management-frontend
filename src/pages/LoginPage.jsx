@@ -39,19 +39,40 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input name="username" placeholder="Username" onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      {error && <p>{error}</p>}
-      <p>
-        Need an account? <Link to="/register">Register</Link>
-      </p>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h1>Login</h1>
+        <p className="auth-subtitle">Sign in to access your inventory dashboard.</p>
+
+        <form onSubmit={handleSubmit} className="form-grid">
+          <input
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        {error && <p className="status-message error spacer-top">{error}</p>}
+
+        <p className="spacer-top">
+          Need an account? <Link to="/register">Register</Link>
+        </p>
+      </div>
     </div>
   );
 }

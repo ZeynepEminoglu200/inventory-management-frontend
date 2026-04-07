@@ -29,34 +29,68 @@ function RegisterPage() {
       await api.post("register/", formData);
       navigate("/login");
     } catch (err) {
-  console.error("Registration error:", err.response?.data || err.message);
-  setError(
-    err.response?.data?.username?.[0] ||
-    err.response?.data?.email?.[0] ||
-    err.response?.data?.password?.[0] ||
-    err.response?.data?.detail ||
-    "Registration failed. Please check your details."
-  );
-}finally {
+      console.error("Registration error:", err.response?.data || err.message);
+
+      setError(
+        err.response?.data?.username?.[0] ||
+        err.response?.data?.email?.[0] ||
+        err.response?.data?.password?.[0] ||
+        err.response?.data?.detail ||
+        "Registration failed. Please check your details."
+      );
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <input name="username" placeholder="Username" onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-      {error && <p>{error}</p>}
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h1>Register</h1>
+        <p className="auth-subtitle">
+          Create an account to manage your inventory securely.
+        </p>
+
+        <form onSubmit={handleSubmit} className="form-grid">
+          <input
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
+        </form>
+
+        {error && (
+          <p className="status-message error spacer-top">{error}</p>
+        )}
+
+        <p className="spacer-top">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }
