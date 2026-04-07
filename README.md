@@ -1,101 +1,120 @@
 Inventory Management System – Frontend
-🚀 Quick Start
+Quick Start
 Install dependencies
 npm install
-Run the app
+Run the application
 npm run dev
 
-App will run at:
+The app will be available at:
 
 http://localhost:5173
-Run all tests
+Run Tests
+
+Run all tests once:
+
 npx vitest run
-Run tests in watch mode
+
+Run tests in watch mode:
+
 npx vitest
+Overview
 
-Summary
+This project is the frontend for an Inventory Management System built using React.
 
-This is the frontend for my Inventory Management System that I built with React. It allows users to manage inventory items, track stock levels, and view stock history.
+It allows users to manage inventory items, track stock levels, and view stock history through a user-friendly interface.
 
-My app connects to a Django REST API backend and supports the following features :
+The frontend communicates with a Django REST API backend and provides the following functionality:
 
 User registration and login
-Creating, editing, and deleting items
-Searching and filtering inventory
-Viewing low-stock items
+Creating, editing, and deleting inventory items
+Searching and filtering items
+Identifying low-stock items
 Viewing stock history (audit log)
-
 Architecture
 
-The project follows a 3-layer architecture I have based this architcure on what we where provided in the assignment docs :
+The system follows a three-layer architecture:
 
-Frontend (React) → UI and user interaction
-Backend (Django API) → business logic and validation
-Database (PostgreSQL) → data storage
+Frontend (React)
 
-The frontend only communicates with the backend via API requests as required in the assignment.
+Handles UI, routing, and user interaction.
 
- Authentication
+Backend (Django REST API)
 
-My Authentication is handled using JWT tokens:
+Handles authentication, business logic, and validation.
 
-Login via /api/token/
+Database (PostgreSQL)
+
+Stores users, items, categories, and stock logs.
+
+The frontend does not directly access the database and interacts only through API endpoints.
+
+Authentication
+
+Authentication is implemented using JWT (JSON Web Tokens).
+
+Features
+
+Login via:
+
+/api/token/
 Tokens stored in localStorage
-Protected routes to prevent unauthorised access
-Logout clears tokens
-
-My Pages
-Login & Register Pages
+Protected routes restrict access to authenticated users
+Logout clears stored tokens
+Pages and Features
+Login and Register
 Users can create accounts and log in
-Displays errors and loading states
-
-Dashboard Paged 
+Displays validation errors and loading states
+Dashboard
 Displays inventory items
 Supports:
-Search by name
+Search by item name
 Filter by category
 Low-stock filtering
 Allows item deletion
 Add Item
-Form to create new items
+Form to create new inventory items
 Edit Item
-Updates existing items
-
-Stock History Page
+Updates existing inventory items
+Pre-fills form with current data
+Stock History
 Displays stock changes (audit log)
-Shows item, change amount, user, and timestamp
-
+Shows item name, change amount, user, and timestamp
 API Integration
 
-API requests are handled using Axios:
+All API requests are handled using Axios.
 
+Example endpoints
 api.get("items/");
 api.post("items/");
 api.put("items/:id/");
 api.delete("items/:id/");
+Key features
+Centralised API service
+JWT token automatically attached to requests
+Error handling for failed requests
+Testing
 
-JWT tokens are automatically added to requests.
-
- 
- Testing
-
-Frontend tests are written using:
+Frontend tests are implemented using:
 
 Vitest
 React Testing Library
-
-Tests cover:
-
-Rendering pages
+Tests cover
+Page rendering
 Form input handling
 API calls (mocked)
 Error handling
-Navigation
+Navigation flows
+UI and Styling
 
+The UI uses custom CSS and focuses on:
 
-🔗 Backend Setup
+Clean layout and spacing
+Reusable components
+Clear user feedback (loading, errors, empty states)
+Highlighting low-stock items
+Backend Setup
 
-Make sure the backend is running at:
+Ensure the backend is running at:
 
 http://127.0.0.1:8000
 
