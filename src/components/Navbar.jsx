@@ -6,6 +6,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
@@ -18,6 +19,7 @@ function Navbar() {
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/add-item">Add Item</Link>
           <Link to="/stock-history">Stock History</Link>
+          <Link to="/profile">Profile</Link>
           <button className="btn-danger" onClick={handleLogout}>
             Logout
           </button>

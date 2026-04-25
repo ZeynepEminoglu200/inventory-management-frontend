@@ -5,6 +5,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AddItemPage from "./pages/AddItemPage";
 import EditItemPage from "./pages/EditItemPage";
 import StockHistoryPage from "./pages/StockHistoryPage";
+import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -46,6 +47,15 @@ function App() {
         element={
           <ProtectedRoute>
             <StockHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />
